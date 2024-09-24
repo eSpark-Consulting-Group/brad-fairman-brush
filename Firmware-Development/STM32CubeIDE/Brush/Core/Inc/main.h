@@ -37,8 +37,11 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 #define LONG_PRESS_DURATION 5000
+#define MOTOR_DURATION 30000
 extern volatile uint32_t buttonPressStartTime;
+extern volatile uint32_t motorStartTime;
 extern volatile uint8_t buttonPressed;
+extern volatile uint8_t motorStarted;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

@@ -27,7 +27,9 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 volatile uint32_t buttonPressStartTime = 0;
+volatile uint32_t motorStartTime = 0;
 volatile uint8_t buttonPressed = 0;
+volatile uint8_t motorStarted = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -107,6 +109,17 @@ int main(void)
 			  HAL_SuspendTick();
 			  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 			  HAL_ResumeTick();
+		  }
+	  }
+	  else
+	  {
+		  if(motorStarted)
+		  {
+			  if (HAL_GetTick() - motorStartTime >= MOTOR_DURATION)
+			  {
+				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+				  motorStarted = 0;
+			  }
 		  }
 	  }
     /* USER CODE END WHILE */
@@ -220,7 +233,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : USER_BUTTON_Pin */
   GPIO_InitStruct.Pin = USER_BUTTON_Pin;
