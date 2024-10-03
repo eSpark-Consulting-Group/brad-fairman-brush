@@ -105,7 +105,7 @@ int main(void)
 		  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
 		  {
 			  buttonPressed = 0;
-			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
 			  HAL_SuspendTick();
 			  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 			  HAL_ResumeTick();
@@ -117,7 +117,7 @@ int main(void)
 		  {
 			  if (HAL_GetTick() - motorStartTime >= MOTOR_DURATION)
 			  {
-				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
 				  motorStarted = 0;
 			  }
 		  }

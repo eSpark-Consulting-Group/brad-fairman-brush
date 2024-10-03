@@ -60,8 +60,8 @@ all: main-build
 main-build: Brush-v1.elf secondary-outputs
 
 # Tool invocations
-Brush-v1.elf Brush-v1.map: $(OBJS) $(USER_OBJS) C:\Users\Abeer.DESKTOP-Q8FRVD0\Downloads\Brush_Project\Brush_Project\Brush\STM32G030F6PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Brush-v1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\Abeer.DESKTOP-Q8FRVD0\Downloads\Brush_Project\Brush_Project\Brush\STM32G030F6PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Brush-v1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Brush-v1.elf Brush-v1.map: $(OBJS) $(USER_OBJS) C:\Users\Ash\Documents\GitHub\bradfairman-brush\Firmware-Development\STM32CubeIDE\Brush\STM32G030F6PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Brush-v1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\Ash\Documents\GitHub\bradfairman-brush\Firmware-Development\STM32CubeIDE\Brush\STM32G030F6PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Brush-v1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
