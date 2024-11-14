@@ -100,6 +100,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+#if 0
 	  if (buttonPressed)
 	  {
 		  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
@@ -123,6 +124,42 @@ int main(void)
 			  }
 		  }
 	  }
+#else
+	  uint8_t status = (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET);
+	  	  if(status)
+	  	  {
+	  		  if (!buttonPressed)
+	  		  {
+	  			  buttonPressStartTime = HAL_GetTick();
+	  			  buttonPressed = 1;
+	  		  }
+	  		  else
+	  		  {
+	  			  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
+	  			  {
+	  				  buttonPressed = 0;
+	  				  motorStarted = 0;
+	  				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
+	  				  HAL_SuspendTick();
+	  				  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	  				  HAL_ResumeTick();
+	  			  }
+	  		  }
+	  	  }
+	  	  else
+	  	  {
+	  		  buttonPressed = 0;
+	  	  }
+
+	  	  if(motorStarted)
+	  	  {
+	  		  if (HAL_GetTick() - motorStartTime >= MOTOR_DURATION)
+	  		  {
+	  			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
+	  			  motorStarted = 0;
+	  		  }
+	  	  }
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -238,7 +275,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : USER_BUTTON_Pin */
   GPIO_InitStruct.Pin = USER_BUTTON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
 

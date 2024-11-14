@@ -146,6 +146,7 @@ void SysTick_Handler(void)
 void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
+#if 0
 	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET) {
 		buttonPressed = 1;
 		buttonPressStartTime = HAL_GetTick();
@@ -164,7 +165,14 @@ void EXTI0_1_IRQHandler(void)
 		}
 		buttonPressed = 0;
 	}
-
+#else
+	if(!motorStarted)
+	{
+		motorStarted = 1;
+		motorStartTime = HAL_GetTick();
+		HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+	}
+#endif
   /* USER CODE END EXTI0_1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_Pin);
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
