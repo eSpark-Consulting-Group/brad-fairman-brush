@@ -154,9 +154,12 @@ void EXTI0_1_IRQHandler(void)
 	{
 		if(HAL_GetTick() - buttonPressStartTime < LONG_PRESS_DURATION)
 		{
-			motorStarted = 1;
-			motorStartTime = HAL_GetTick();
-			HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+			if(!motorStarted)
+			{
+				motorStarted = 1;
+				motorStartTime = HAL_GetTick();
+				HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_SET);
+			}
 //			HAL_TIM_Base_Start_IT(&htim3);
 		}
 		buttonPressed = 0;

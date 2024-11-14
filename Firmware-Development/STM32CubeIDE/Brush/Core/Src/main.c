@@ -105,6 +105,7 @@ int main(void)
 		  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
 		  {
 			  buttonPressed = 0;
+			  motorStarted = 0;
 			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
 			  HAL_SuspendTick();
 			  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
@@ -238,7 +239,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : USER_BUTTON_Pin */
   GPIO_InitStruct.Pin = USER_BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MOTOR_CONTROL_Pin */
