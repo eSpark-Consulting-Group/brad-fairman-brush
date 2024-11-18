@@ -38,10 +38,18 @@ extern "C" {
 /* USER CODE BEGIN ET */
 #define LONG_PRESS_DURATION 5000
 #define MOTOR_DURATION 30000
-extern volatile uint32_t buttonPressStartTime;
-extern volatile uint32_t motorStartTime;
-extern volatile uint8_t buttonPressed;
-extern volatile uint8_t motorStarted;
+
+typedef struct
+{
+	uint32_t buttonPressStartTime;
+	uint32_t motorStartTime;
+	uint32_t sleepTime;
+	uint8_t buttonPressed;
+	uint8_t motorStarted;
+	uint8_t enterSleep;
+} ButtonData;
+
+extern volatile ButtonData bd;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

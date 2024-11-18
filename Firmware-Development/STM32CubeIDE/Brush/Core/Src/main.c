@@ -26,10 +26,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-volatile uint32_t buttonPressStartTime = 0;
-volatile uint32_t motorStartTime = 0;
-volatile uint8_t buttonPressed = 0;
-volatile uint8_t motorStarted = 0;
+volatile ButtonData bd = {0};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -100,66 +97,47 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-#if 0
-	  if (buttonPressed)
+	  uint8_t status = (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET);
+	  if(status)
 	  {
-		  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
+		  if (!bd.buttonPressed)
 		  {
-			  buttonPressed = 0;
-			  motorStarted = 0;
-			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
-			  HAL_SuspendTick();
-			  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-			  HAL_ResumeTick();
+			  bd.buttonPressStartTime = HAL_GetTick();
+			  bd.buttonPressed = 1;
+		  }
+		  else
+		  {
+			  if (HAL_GetTick() - bd.buttonPressStartTime >= LONG_PRESS_DURATION)
+			  {
+				  bd.buttonPressed = 0;
+				  bd.motorStarted = 0;
+				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
+				  bd.sleepTime = HAL_GetTick();
+//				  HAL_SuspendTick();
+//				  HAL_ResumeTick();
+				  bd.enterSleep = 1;
+			  }
 		  }
 	  }
 	  else
 	  {
-		  if(motorStarted)
+		  bd.buttonPressed = 0;
+	  }
+
+	  if(bd.motorStarted)
+	  {
+		  if (HAL_GetTick() - bd.motorStartTime >= MOTOR_DURATION)
 		  {
-			  if (HAL_GetTick() - motorStartTime >= MOTOR_DURATION)
-			  {
-				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
-				  motorStarted = 0;
-			  }
+			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
+			  bd.motorStarted = 0;
 		  }
 	  }
-#else
-	  uint8_t status = (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET);
-	  	  if(status)
-	  	  {
-	  		  if (!buttonPressed)
-	  		  {
-	  			  buttonPressStartTime = HAL_GetTick();
-	  			  buttonPressed = 1;
-	  		  }
-	  		  else
-	  		  {
-	  			  if (HAL_GetTick() - buttonPressStartTime >= LONG_PRESS_DURATION)
-	  			  {
-	  				  buttonPressed = 0;
-	  				  motorStarted = 0;
-	  				  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
-	  				  HAL_SuspendTick();
-	  				  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-	  				  HAL_ResumeTick();
-	  			  }
-	  		  }
-	  	  }
-	  	  else
-	  	  {
-	  		  buttonPressed = 0;
-	  	  }
 
-	  	  if(motorStarted)
-	  	  {
-	  		  if (HAL_GetTick() - motorStartTime >= MOTOR_DURATION)
-	  		  {
-	  			  HAL_GPIO_WritePin(MOTOR_CONTROL_GPIO_Port, MOTOR_CONTROL_Pin, GPIO_PIN_RESET);
-	  			  motorStarted = 0;
-	  		  }
-	  	  }
-#endif
+	  if(bd.motorStarted)
+	  {
+		  HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+		  bd.enterSleep = 0;
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
