@@ -36,7 +36,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-#define LONG_PRESS_DURATION 5000
+#define LONG_PRESS_DURATION 3000
 #define MOTOR_DURATION 30000
 
 typedef struct
