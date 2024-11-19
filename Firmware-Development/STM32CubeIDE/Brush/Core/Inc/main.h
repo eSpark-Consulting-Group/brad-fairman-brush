@@ -38,6 +38,7 @@ extern "C" {
 /* USER CODE BEGIN ET */
 #define LONG_PRESS_DURATION 3000
 #define MOTOR_DURATION 30000
+#define FALSE_DETECTION_TIME 600
 
 typedef struct
 {
@@ -66,7 +67,7 @@ extern volatile ButtonData bd;
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+uint64_t Get_Elapsed_Milliseconds(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

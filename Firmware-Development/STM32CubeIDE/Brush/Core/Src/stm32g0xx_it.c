@@ -148,9 +148,9 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
 	if(!bd.motorStarted)
 	{
-		uint32_t currentTime = HAL_GetTick();
-		uint32_t duration = currentTime - bd.sleepTime;
-		if(duration > 600)
+		uint64_t currentTime = Get_Elapsed_Milliseconds();
+		uint64_t duration = currentTime - bd.sleepTime;
+		if(duration > FALSE_DETECTION_TIME)
 		{
 			bd.motorStarted = 1;
 			bd.motorStartTime = HAL_GetTick();
